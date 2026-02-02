@@ -17,7 +17,7 @@
   },
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "cd build && git init && git add -A && git commit -m 'Deploy' && git branch -M gh-pages && (git remote add origin https://github.com/zgorfol/holdujev.git 2>/dev/null || git remote set-url origin https://github.com/zgorfol/holdujev.git) && git push -f origin gh-pages && cd .. && rm -rf build/.git",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
