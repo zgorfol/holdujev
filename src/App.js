@@ -4,7 +4,7 @@ import { ChevronDown, ChevronUp, AlertCircle, CheckCircle } from 'lucide-react';
 const SexagenaryHexagramSystem = () => {
   const [activeMethod, setActiveMethod] = useState('natural');
   const [skipOption, setSkipOption] = useState('option1');
-  const [showValidation, setShowValidation] = useState(false);
+  const [showValidation, setShowValidation] = useState(true);
 
   // Égi Törzsek és Földi Ágak
   const stems = [
@@ -12,8 +12,8 @@ const SexagenaryHexagramSystem = () => {
     { name: 'Yi 乙', element: 'Yin Fa', pin: 'yǐ', trigramBinary: 0b110, trigramName: 'Xun ☴' },
     { name: 'Bing 丙', element: 'Yang Tűz', pin: 'bǐng', trigramBinary: 0b101, trigramName: 'Li ☲' },
     { name: 'Ding 丁', element: 'Yin Tűz', pin: 'dīng', trigramBinary: 0b101, trigramName: 'Li ☲' },
-    { name: 'Wu 戊', element: 'Yang Föld', pin: 'wù', trigramBinary: 0b000, trigramName: 'Kun ☷' },
-    { name: 'Ji 己', element: 'Yin Föld', pin: 'jǐ', trigramBinary: 0b100, trigramName: 'Gen ☶'},
+    { name: 'Wu 戊', element: 'Yang Föld', pin: 'wù', trigramBinary: 0b100, trigramName: 'Gen ☶' },
+    { name: 'Ji 己', element: 'Yin Föld', pin: 'jǐ', trigramBinary: 0b000, trigramName: 'Kun ☷' },
     { name: 'Geng 庚', element: 'Yang Fém', pin: 'gēng', trigramBinary: 0b111, trigramName: 'Qian ☰' },
     { name: 'Xin 辛', element: 'Yin Fém', pin: 'xīn', trigramBinary: 0b011, trigramName: 'Dui ☱' },
     { name: 'Ren 壬', element: 'Yang Víz', pin: 'rén', trigramBinary: 0b010, trigramName: 'Kan ☵' },
@@ -108,7 +108,8 @@ const SexagenaryHexagramSystem = () => {
   const skipOptions = {
     option1: { nums: [29, 30, 51, 58], name: 'Napfordulók és Napéjegyenlőségek (29,30,51,58)' },
     option2: { nums: [2, 30, 51, 58], name: 'Kun + Napéjegyenlőségek (2,30,51,58)' },
-    option3: { nums: [1, 2, 29, 30], name: 'Qian, Kun + Napfordulók (1,2,29,30)' }
+    option3: { nums: [1, 2, 29, 30], name: 'Qian, Kun + Napfordulók (1,2,29,30)' },
+    option4: { nums: [1, 2, 63, 64], name: 'Qian, Kun + Ji Ji, Wei Ji (1,2,63,64)' }
   };
 
   // Hexagram vizuális megjelenítő függvény
@@ -213,12 +214,131 @@ const SexagenaryHexagramSystem = () => {
     return first60Hexagrams[yearIndex];
   };
 
+  // Módszer 5: Xuankong Da Gua (玄空大卦配卦歌诀) - tradicionális feng shui rendszer
+  // Forrás: fengshui.net / Stephen Skinner, a 玄空大卦 vers alapján
+  // Kihagyott 4 hexagram: #4 (Meng), #24 (Fu), #44 (Gou), #49 (Ge)
+  const xuankongMap = [
+    2, 21, 37, 41, 10, 34, 32,  6,  7, 53,  // 甲子..癸酉 (index 0-9)
+   39, 35, 27, 17, 55, 60, 11, 14, 57, 47,  // 甲戌..癸未 (index 10-19)
+   64, 33, 52, 16,  3, 25, 29, 61, 26, 43,  // 甲申..癸巳 (index 20-29)
+    1, 48, 40, 31, 15, 20, 42, 36, 13, 54,  // 甲午..癸卯 (index 30-39)
+   38,  5, 28, 18, 59, 56, 12,  8, 51, 22,  // 甲辰..癸丑 (index 40-49)
+   63, 19, 58,  9, 50, 46, 30, 62, 45, 23   // 甲寅..癸亥 (index 50-59)
+  ];
+
+  const getMethod5Hexagram = (yearIndex) => {
+    const hexNum = xuankongMap[yearIndex];
+    return hexagrams.find(h => h.num === hexNum);
+  };
+
+  // Módszer 6: Égi Törzs-Földi Ág kombinált rendszer (eredeti)
+  const getMethod6Hexagram = (yearIndex) => {
+    // Égi Törzsek és Földi Ágak
+    const stems = [
+      { name: 'Jia 甲', element: 'Yang Fa', pin: 'jiǎ', trigramBinary: 0b110, trigramName: 'Xun ☴' },
+      { name: 'Yi 乙', element: 'Yin Fa', pin: 'yǐ', trigramBinary: 0b110, trigramName: 'Xun ☴' },
+      { name: 'Bing 丙', element: 'Yang Tűz', pin: 'bǐng', trigramBinary: 0b101, trigramName: 'Li ☲' },
+      { name: 'Ding 丁', element: 'Yin Tűz', pin: 'dīng', trigramBinary: 0b101, trigramName: 'Li ☲' },
+      { name: 'Wu 戊', element: 'Yang Föld', pin: 'wù', trigramBinary: 0b000, trigramName: 'Kun ☷' },
+      { name: 'Ji 己', element: 'Yin Föld', pin: 'jǐ', trigramBinary: 0b000, trigramName: 'Kun ☷' },
+      { name: 'Geng 庚', element: 'Yang Fém', pin: 'gēng', trigramBinary: 0b011, trigramName: 'Dui ☱' },
+      { name: 'Xin 辛', element: 'Yin Fém', pin: 'xīn', trigramBinary: 0b011, trigramName: 'Dui ☱' },
+      { name: 'Ren 壬', element: 'Yang Víz', pin: 'rén', trigramBinary: 0b010, trigramName: 'Kan ☵' },
+      { name: 'Gui 癸', element: 'Yin Víz', pin: 'guǐ', trigramBinary: 0b010, trigramName: 'Kan ☵' }
+    ];
+
+    const branches = [
+      { name: 'Zi 子', animal: 'Patkány', element: 'Víz', trigramBinary: 0b010, trigramName: 'Kan ☵' },
+      { name: 'Chou 丑', animal: 'Bivaly', element: 'Föld', trigramBinary: 0b100, trigramName: 'Gen ☶' },
+      { name: 'Yin 寅', animal: 'Tigris', element: 'Fa', trigramBinary: 0b110, trigramName: 'Xun ☴' },
+      { name: 'Mao 卯', animal: 'Nyúl', element: 'Fa', trigramBinary: 0b110, trigramName: 'Xun ☴' },
+      { name: 'Chen 辰', animal: 'Sárkány', element: 'Föld', trigramBinary: 0b001, trigramName: 'Zhen ☳' },
+      { name: 'Si 巳', animal: 'Kígyó', element: 'Tűz', trigramBinary: 0b101, trigramName: 'Li ☲' },
+      { name: 'Wu 午', animal: 'Ló', element: 'Tűz', trigramBinary: 0b101, trigramName: 'Li ☲' },
+      { name: 'Wei 未', animal: 'Kecske', element: 'Föld', trigramBinary: 0b000, trigramName: 'Kun ☷' },
+      { name: 'Shen 申', animal: 'Majom', element: 'Fém', trigramBinary: 0b011, trigramName: 'Dui ☱' },
+      { name: 'You 酉', animal: 'Kakas', element: 'Fém', trigramBinary: 0b011, trigramName: 'Dui ☱' },
+      { name: 'Xu 戌', animal: 'Kutya', element: 'Föld', trigramBinary: 0b111, trigramName: 'Qian ☰' },
+      { name: 'Hai 亥', animal: 'Disznó', element: 'Víz', trigramBinary: 0b010, trigramName: 'Kan ☵' }
+    ];
+
+    const stemIdx = yearIndex % 10;
+    const branchIdx = yearIndex % 12;
+    
+    const upperTrigram = branches[branchIdx].trigramBinary;
+    const lowerTrigram = stems[stemIdx].trigramBinary;
+    const hexagramNumber = upperTrigram * 8 + lowerTrigram;
+
+    const foundHexagram = hexagrams.find(h => h.binary === hexagramNumber);
+
+    // Fallback: ha a keresés nem jár sikerrel, visszatérünk a természetes sorrendhez,
+    // hogy elkerüljük az összeomlást.
+    if (!foundHexagram) {
+      return hexagrams[yearIndex];
+    }
+    return foundHexagram;
+  };
+
+    // Módszer 7: Égi Törzs-Földi Ág kombinált rendszer (újított)
+    const getMethod7Hexagram = (yearIndex) => {
+      // Égi Törzsek és Földi Ágak
+      const stems = [
+        { name: 'Jia 甲', element: 'Yang Fa', pin: 'jiǎ', trigramBinary: 0b001, trigramName: 'Zhen ☳' },
+        { name: 'Yi 乙', element: 'Yin Fa', pin: 'yǐ', trigramBinary: 0b110, trigramName: 'Xun ☴' },
+        { name: 'Bing 丙', element: 'Yang Tűz', pin: 'bǐng', trigramBinary: 0b101, trigramName: 'Li ☲' },
+        { name: 'Ding 丁', element: 'Yin Tűz', pin: 'dīng', trigramBinary: 0b101, trigramName: 'Li ☲' },
+        { name: 'Wu 戊', element: 'Yang Föld', pin: 'wù', trigramBinary: 0b100, trigramName: 'Gen ☶' },
+        { name: 'Ji 己', element: 'Yin Föld', pin: 'jǐ', trigramBinary: 0b000, trigramName: 'Kun ☷' },
+        { name: 'Geng 庚', element: 'Yang Fém', pin: 'gēng', trigramBinary: 0b111, trigramName: 'Qian ☰' },
+        { name: 'Xin 辛', element: 'Yin Fém', pin: 'xīn', trigramBinary: 0b011, trigramName: 'Dui ☱' },
+        { name: 'Ren 壬', element: 'Yang Víz', pin: 'rén', trigramBinary: 0b010, trigramName: 'Kan ☵' },
+        { name: 'Gui 癸', element: 'Yin Víz', pin: 'guǐ', trigramBinary: 0b010, trigramName: 'Kan ☵' }
+      ];
+
+      const branches = [
+        { name: 'Zi 子', animal: 'Patkány', element: 'Víz', trigramBinary: 0b010, trigramName: 'Kan ☵' },
+        { name: 'Chou 丑', animal: 'Bivaly', element: 'Föld', trigramBinary: 0b100, trigramName: 'Gen ☶' },
+        { name: 'Yin 寅', animal: 'Tigris', element: 'Fa', trigramBinary: 0b110, trigramName: 'Xun ☴' },
+        { name: 'Mao 卯', animal: 'Nyúl', element: 'Fa', trigramBinary: 0b110, trigramName: 'Xun ☴' },
+        { name: 'Chen 辰', animal: 'Sárkány', element: 'Föld', trigramBinary: 0b001, trigramName: 'Zhen ☳' },
+        { name: 'Si 巳', animal: 'Kígyó', element: 'Tűz', trigramBinary: 0b101, trigramName: 'Li ☲' },
+        { name: 'Wu 午', animal: 'Ló', element: 'Tűz', trigramBinary: 0b101, trigramName: 'Li ☲' },
+        { name: 'Wei 未', animal: 'Kecske', element: 'Föld', trigramBinary: 0b000, trigramName: 'Kun ☷' },
+        { name: 'Shen 申', animal: 'Majom', element: 'Fém', trigramBinary: 0b011, trigramName: 'Dui ☱' },
+        { name: 'You 酉', animal: 'Kakas', element: 'Fém', trigramBinary: 0b011, trigramName: 'Dui ☱' },
+        { name: 'Xu 戌', animal: 'Kutya', element: 'Föld', trigramBinary: 0b111, trigramName: 'Qian ☰' },
+        { name: 'Hai 亥', animal: 'Disznó', element: 'Víz', trigramBinary: 0b010, trigramName: 'Kan ☵' }
+      ];
+
+      const stemIdx = yearIndex % 10;
+      const branchIdx = yearIndex % 12;
+
+      const upperTrigram = branches[branchIdx].trigramBinary;
+      const lowerTrigram = stems[stemIdx].trigramBinary;
+      const hexagramNumber = upperTrigram * 8 + lowerTrigram;
+
+      const foundHexagram = hexagrams.find(h => h.binary === hexagramNumber);
+
+      // Fallback: ha a keresés nem jár sikerrel, visszatérünk a természetes sorrendhez,
+      // hogy elkerüljük az összeomlást.
+      if (!foundHexagram) {
+        return hexagrams[yearIndex];
+      }
+
+    return foundHexagram;
+  };
+
+ 
+
   const getCurrentHexagram = (yearIndex) => {
     switch (activeMethod) {
       case 'natural': return getMethod1Hexagram(yearIndex, skipOption);
       case 'combined': return getMethod2Hexagram(yearIndex);
       case 'combvalue': return getMethod3Hexagram(yearIndex);
       case 'fuxi': return getMethod4Hexagram(yearIndex);
+      case 'xuankong': return getMethod5Hexagram(yearIndex);
+      case 'govinda': return getMethod6Hexagram(yearIndex);
+      case 'govindauj': return getMethod7Hexagram(yearIndex);
       default: return getMethod1Hexagram(yearIndex, skipOption);
     }
   };
@@ -233,7 +353,10 @@ const SexagenaryHexagramSystem = () => {
       if (method === 'natural') hex = getMethod1Hexagram(i, option);
       else if (method === 'combined') hex = getMethod2Hexagram(i);
       else if (method === 'combvalue') hex = getMethod3Hexagram(i);
-      else hex = getMethod4Hexagram(i);
+      else if (method === 'fuxi') hex = getMethod4Hexagram(i);
+      else if (method === 'xuankong') hex = getMethod5Hexagram(i);
+      else if (method === 'govinda') hex = getMethod6Hexagram(i);
+      else if (method === 'govindauj') hex = getMethod7Hexagram(i);
 
       if (!hexagramCounts[hex.num]) {
         hexagramCounts[hex.num] = 0;
@@ -245,7 +368,7 @@ const SexagenaryHexagramSystem = () => {
 
     const duplicatedHexagrams = [];
     const missingHexagrams = [];
-    const skipped = method === 'natural' ? skipOptions[option].nums : [];
+    const skipped = method === 'natural' ? skipOptions[option].nums : method === 'xuankong' ? [4, 24, 44, 49] : [];
     const expectedHexagrams = hexagrams.filter(h => !skipped.includes(h.num)).map(h => h.num);
 
     Object.entries(hexagramCounts).forEach(([num, count]) => {
@@ -278,7 +401,10 @@ const SexagenaryHexagramSystem = () => {
     natural: validateMethod('natural', skipOption),
     combined: validateMethod('combined'),
     combvalue: validateMethod('combvalue'),
-    fuxi: validateMethod('fuxi')
+    fuxi: validateMethod('fuxi'),
+    xuankong: validateMethod('xuankong'),
+    govinda: validateMethod('govinda'),
+    govindauj: validateMethod('govindauj')
   };
 
   const currentYear = 2025;
@@ -307,8 +433,11 @@ const SexagenaryHexagramSystem = () => {
             {[
               { key: 'natural', label: 'Módszer 1', desc: 'Természetes Sorrend', note: 'Wen Wang', activeClass: 'bg-blue-100 border-blue-500' },
               { key: 'combined', label: 'Módszer 2', desc: 'Törzs-Ág Kombináció', note: 'Stem × Branch', activeClass: 'bg-green-100 border-green-500' },
-              { key: 'combvalue', label: 'Módszer 3', desc: 'Bináris Keresés', note: 'Érték Alapú', activeClass: 'bg-yellow-100 border-yellow-500' },
-              { key: 'fuxi', label: 'Módszer 4', desc: 'Fu Xi Bináris', note: 'Shao Yong', activeClass: 'bg-purple-100 border-purple-500' }
+              { key: 'combvalue', label: 'Módszer 3', desc: 'Törzs-Ág Kombináció', note: 'Érték Alapú', activeClass: 'bg-yellow-100 border-yellow-500' },
+              { key: 'fuxi', label: 'Módszer 4', desc: 'Fu Xi Bináris', note: 'Shao Yong', activeClass: 'bg-purple-100 border-purple-500' },
+              { key: 'xuankong', label: 'Módszer 5', desc: 'Xuankong Da Gua 玄空大卦', note: 'Tradicionális Feng Shui', activeClass: 'bg-red-100 border-red-500' },
+              { key: 'govinda', label: 'Módszer 6', desc: 'Govinda Törzs-Ág Eredeti', note: 'Fa→☴,Tűz→☲,Föld→☷,Fém→☱,Víz→☵', activeClass: 'bg-pink-100 border-pink-500' },
+              { key: 'govindauj', label: 'Módszer 7', desc: 'Govinda Törzs-Ág Módosított', note: 'Fa→☳☴,Tűz→☲☲,Föld→☷☶,Fém→☰☱,Víz→☵☵', activeClass: 'bg-teal-100 border-teal-500' }
             ].map(m => (
               <button key={m.key} onClick={() => setActiveMethod(m.key)}
                 className={`p-4 rounded-lg border-2 transition-all ${activeMethod === m.key ? m.activeClass : 'bg-white border-gray-300'}`}>
@@ -350,7 +479,7 @@ const SexagenaryHexagramSystem = () => {
                   <div className="flex items-center gap-2 mb-3">
                     {result.isValid ? <CheckCircle className="text-green-600" size={20} /> : <AlertCircle className="text-red-600" size={20} />}
                     <span className="font-semibold text-lg">
-                      {method === 'natural' ? 'Módszer 1' : method === 'combined' ? 'Módszer 2' : method === 'combvalue' ? 'Módszer 3' : 'Módszer 4'}
+                      {method === 'natural' ? 'Módszer 1' : method === 'combined' ? 'Módszer 2' : method === 'combvalue' ? 'Módszer 3' : method === 'fuxi' ? 'Módszer 4' : method === 'xuankong' ? 'Módszer 5' : method === 'govinda' ? 'Módszer 6' : method === 'govindauj' ? 'Módszer 7' : ''}
                     </span>
                   </div>
                   <div className="text-sm mb-2">Egyedi: {result.unique}/60 | Kihagyva: {result.skipped.join(', ') || 'nincs'}</div>
