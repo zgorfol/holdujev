@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, AlertCircle, CheckCircle } from 'lucide-react';
+import * as Astronomy from 'astronomy-engine';
 
 const SexagenaryHexagramSystem = () => {
   const [activeMethod, setActiveMethod] = useState('natural');
@@ -279,56 +280,314 @@ const SexagenaryHexagramSystem = () => {
     return foundHexagram;
   };
 
-    // Módszer 7: Égi Törzs-Földi Ág kombinált rendszer (újított)
-    const getMethod7Hexagram = (yearIndex) => {
-      // Égi Törzsek és Földi Ágak
-      const stems = [
-        { name: 'Jia 甲', element: 'Yang Fa', pin: 'jiǎ', trigramBinary: 0b001, trigramName: 'Zhen ☳' },
-        { name: 'Yi 乙', element: 'Yin Fa', pin: 'yǐ', trigramBinary: 0b110, trigramName: 'Xun ☴' },
-        { name: 'Bing 丙', element: 'Yang Tűz', pin: 'bǐng', trigramBinary: 0b101, trigramName: 'Li ☲' },
-        { name: 'Ding 丁', element: 'Yin Tűz', pin: 'dīng', trigramBinary: 0b101, trigramName: 'Li ☲' },
-        { name: 'Wu 戊', element: 'Yang Föld', pin: 'wù', trigramBinary: 0b100, trigramName: 'Gen ☶' },
-        { name: 'Ji 己', element: 'Yin Föld', pin: 'jǐ', trigramBinary: 0b000, trigramName: 'Kun ☷' },
-        { name: 'Geng 庚', element: 'Yang Fém', pin: 'gēng', trigramBinary: 0b111, trigramName: 'Qian ☰' },
-        { name: 'Xin 辛', element: 'Yin Fém', pin: 'xīn', trigramBinary: 0b011, trigramName: 'Dui ☱' },
-        { name: 'Ren 壬', element: 'Yang Víz', pin: 'rén', trigramBinary: 0b010, trigramName: 'Kan ☵' },
-        { name: 'Gui 癸', element: 'Yin Víz', pin: 'guǐ', trigramBinary: 0b010, trigramName: 'Kan ☵' }
-      ];
+  // Módszer 7: Égi Törzs-Földi Ág kombinált rendszer (újított)
+  const getMethod7Hexagram = (yearIndex) => {
+    // Égi Törzsek és Földi Ágak
+    const stems = [
+      { name: 'Jia 甲', element: 'Yang Fa', pin: 'jiǎ', trigramBinary: 0b001, trigramName: 'Zhen ☳' },
+      { name: 'Yi 乙', element: 'Yin Fa', pin: 'yǐ', trigramBinary: 0b110, trigramName: 'Xun ☴' },
+      { name: 'Bing 丙', element: 'Yang Tűz', pin: 'bǐng', trigramBinary: 0b101, trigramName: 'Li ☲' },
+      { name: 'Ding 丁', element: 'Yin Tűz', pin: 'dīng', trigramBinary: 0b101, trigramName: 'Li ☲' },
+      { name: 'Wu 戊', element: 'Yang Föld', pin: 'wù', trigramBinary: 0b100, trigramName: 'Gen ☶' },
+      { name: 'Ji 己', element: 'Yin Föld', pin: 'jǐ', trigramBinary: 0b000, trigramName: 'Kun ☷' },
+      { name: 'Geng 庚', element: 'Yang Fém', pin: 'gēng', trigramBinary: 0b111, trigramName: 'Qian ☰' },
+      { name: 'Xin 辛', element: 'Yin Fém', pin: 'xīn', trigramBinary: 0b011, trigramName: 'Dui ☱' },
+      { name: 'Ren 壬', element: 'Yang Víz', pin: 'rén', trigramBinary: 0b010, trigramName: 'Kan ☵' },
+      { name: 'Gui 癸', element: 'Yin Víz', pin: 'guǐ', trigramBinary: 0b010, trigramName: 'Kan ☵' }
+    ];
 
-      const branches = [
-        { name: 'Zi 子', animal: 'Patkány', element: 'Víz', trigramBinary: 0b010, trigramName: 'Kan ☵' },
-        { name: 'Chou 丑', animal: 'Bivaly', element: 'Föld', trigramBinary: 0b100, trigramName: 'Gen ☶' },
-        { name: 'Yin 寅', animal: 'Tigris', element: 'Fa', trigramBinary: 0b110, trigramName: 'Xun ☴' },
-        { name: 'Mao 卯', animal: 'Nyúl', element: 'Fa', trigramBinary: 0b110, trigramName: 'Xun ☴' },
-        { name: 'Chen 辰', animal: 'Sárkány', element: 'Föld', trigramBinary: 0b001, trigramName: 'Zhen ☳' },
-        { name: 'Si 巳', animal: 'Kígyó', element: 'Tűz', trigramBinary: 0b101, trigramName: 'Li ☲' },
-        { name: 'Wu 午', animal: 'Ló', element: 'Tűz', trigramBinary: 0b101, trigramName: 'Li ☲' },
-        { name: 'Wei 未', animal: 'Kecske', element: 'Föld', trigramBinary: 0b000, trigramName: 'Kun ☷' },
-        { name: 'Shen 申', animal: 'Majom', element: 'Fém', trigramBinary: 0b011, trigramName: 'Dui ☱' },
-        { name: 'You 酉', animal: 'Kakas', element: 'Fém', trigramBinary: 0b011, trigramName: 'Dui ☱' },
-        { name: 'Xu 戌', animal: 'Kutya', element: 'Föld', trigramBinary: 0b111, trigramName: 'Qian ☰' },
-        { name: 'Hai 亥', animal: 'Disznó', element: 'Víz', trigramBinary: 0b010, trigramName: 'Kan ☵' }
-      ];
+    const branches = [
+      { name: 'Zi 子', animal: 'Patkány', element: 'Víz', trigramBinary: 0b010, trigramName: 'Kan ☵' },
+      { name: 'Chou 丑', animal: 'Bivaly', element: 'Föld', trigramBinary: 0b100, trigramName: 'Gen ☶' },
+      { name: 'Yin 寅', animal: 'Tigris', element: 'Fa', trigramBinary: 0b110, trigramName: 'Xun ☴' },
+      { name: 'Mao 卯', animal: 'Nyúl', element: 'Fa', trigramBinary: 0b110, trigramName: 'Xun ☴' },
+      { name: 'Chen 辰', animal: 'Sárkány', element: 'Föld', trigramBinary: 0b001, trigramName: 'Zhen ☳' },
+      { name: 'Si 巳', animal: 'Kígyó', element: 'Tűz', trigramBinary: 0b101, trigramName: 'Li ☲' },
+      { name: 'Wu 午', animal: 'Ló', element: 'Tűz', trigramBinary: 0b101, trigramName: 'Li ☲' },
+      { name: 'Wei 未', animal: 'Kecske', element: 'Föld', trigramBinary: 0b000, trigramName: 'Kun ☷' },
+      { name: 'Shen 申', animal: 'Majom', element: 'Fém', trigramBinary: 0b011, trigramName: 'Dui ☱' },
+      { name: 'You 酉', animal: 'Kakas', element: 'Fém', trigramBinary: 0b011, trigramName: 'Dui ☱' },
+      { name: 'Xu 戌', animal: 'Kutya', element: 'Föld', trigramBinary: 0b111, trigramName: 'Qian ☰' },
+      { name: 'Hai 亥', animal: 'Disznó', element: 'Víz', trigramBinary: 0b010, trigramName: 'Kan ☵' }
+    ];
 
-      const stemIdx = yearIndex % 10;
-      const branchIdx = yearIndex % 12;
+    const stemIdx = yearIndex % 10;
+    const branchIdx = yearIndex % 12;
 
-      const upperTrigram = branches[branchIdx].trigramBinary;
-      const lowerTrigram = stems[stemIdx].trigramBinary;
-      const hexagramNumber = upperTrigram * 8 + lowerTrigram;
+    const upperTrigram = branches[branchIdx].trigramBinary;
+    const lowerTrigram = stems[stemIdx].trigramBinary;
+    const hexagramNumber = upperTrigram * 8 + lowerTrigram;
 
-      const foundHexagram = hexagrams.find(h => h.binary === hexagramNumber);
+    const foundHexagram = hexagrams.find(h => h.binary === hexagramNumber);
 
-      // Fallback: ha a keresés nem jár sikerrel, visszatérünk a természetes sorrendhez,
-      // hogy elkerüljük az összeomlást.
-      if (!foundHexagram) {
-        return hexagrams[yearIndex];
-      }
+    // Fallback: ha a keresés nem jár sikerrel, visszatérünk a természetes sorrendhez,
+    // hogy elkerüljük az összeomlást.
+    if (!foundHexagram) {
+      return hexagrams[yearIndex];
+    }
 
     return foundHexagram;
   };
 
+  // Módszer 9: Égi Törzs-Földi Ág kombinált rendszer (fejlesztés alatt)
+  const getMethod9Hexagram = (yearIndex) => {
+    // Égi Törzsek és Földi Ágak
+    
+    const stems = [
+      { name: 'Jia 甲', element: 'Yang Fa', pin: 'jiǎ', trigramBinary: 0b001, trigramName: 'Zhen ☳' },
+      { name: 'Yi 乙', element: 'Yin Fa', pin: 'yǐ', trigramBinary: 0b110, trigramName: 'Xun ☴' },
+      { name: 'Bing 丙', element: 'Yang Tűz', pin: 'bǐng', trigramBinary: 0b101, trigramName: 'Li ☲' },
+      { name: 'Ding 丁', element: 'Yin Tűz', pin: 'dīng', trigramBinary: 0b101, trigramName: 'Li ☲' },
+      { name: 'Wu 戊', element: 'Yang Föld', pin: 'wù', trigramBinary: 0b100, trigramName: 'Gen ☶' },
+      { name: 'Ji 己', element: 'Yin Föld', pin: 'jǐ', trigramBinary: 0b000, trigramName: 'Kun ☷' },
+      { name: 'Geng 庚', element: 'Yang Fém', pin: 'gēng', trigramBinary: 0b011, trigramName: 'Qian ☰' },
+      { name: 'Xin 辛', element: 'Yin Fém', pin: 'xīn', trigramBinary: 0b111, trigramName: 'Dui ☱' },
+      { name: 'Ren 壬', element: 'Yang Víz', pin: 'rén', trigramBinary: 0b010, trigramName: 'Kan ☵' },
+      { name: 'Gui 癸', element: 'Yin Víz', pin: 'guǐ', trigramBinary: 0b010, trigramName: 'Kan ☵' }
+    ];  
+    const branches = [
+      { name: 'Zi 子', animal: 'Patkány', element: 'Víz', trigramBinary: 0b010, trigramName: 'Kan ☵' },
+      { name: 'Chou 丑', animal: 'Bivaly', element: 'Föld', trigramBinary: 0b100, trigramName: 'Gen ☶' },
+      { name: 'Yin 寅', animal: 'Tigris', element: 'Fa', trigramBinary: 0b110, trigramName: 'Xun ☴' },
+      { name: 'Mao 卯', animal: 'Nyúl', element: 'Fa', trigramBinary: 0b1100, trigramName: 'Xun ☴' },
+      { name: 'Chen 辰', animal: 'Sárkány', element: 'Föld', trigramBinary: 0b001, trigramName: 'Zhen ☳' },
+      { name: 'Si 巳', animal: 'Kígyó', element: 'Tűz', trigramBinary: 0b101, trigramName: 'Li ☲' },
+      { name: 'Wu 午', animal: 'Ló', element: 'Tűz', trigramBinary: 0b101, trigramName: 'Li ☲' },
+      { name: 'Wei 未', animal: 'Kecske', element: 'Föld', trigramBinary: 0b000, trigramName: 'Kun ☷' },
+      { name: 'Shen 申', animal: 'Majom', element: 'Fém', trigramBinary: 0b011, trigramName: 'Dui ☱' },
+      { name: 'You 酉', animal: 'Kakas', element: 'Fém', trigramBinary: 0b011, trigramName: 'Dui ☱' },
+      { name: 'Xu 戌', animal: 'Kutya', element: 'Föld', trigramBinary: 0b111, trigramName: 'Qian ☰' },
+      { name: 'Hai 亥', animal: 'Disznó', element: 'Víz', trigramBinary: 0b010, trigramName: 'Kan ☵' }
+    ];
+    
+    const stemIdx = yearIndex % 10;
+    const branchIdx = yearIndex % 12;
+
+    const upperTrigram = branches[branchIdx].trigramBinary;
+    const lowerTrigram = stems[stemIdx].trigramBinary;
+    const hexagramNumber = upperTrigram * 8 + lowerTrigram;
+
+    const foundHexagram = hexagrams.find(h => h.binary === hexagramNumber);
+
+    // Fallback: ha a keresés nem jár sikerrel, visszatérünk a természetes sorrendhez,
+    // hogy elkerüljük az összeomlást.
+    if (!foundHexagram) {
+      return hexagrams[yearIndex];
+    }
+
+    return foundHexagram;
+  };
+
+
+  // Módszer 8: NewMoonTime
+  const newMoonTimeCalc = (yearIdx) => {
+    const gregorianYear = 1984 + yearIdx;
+
+    // Téli napforduló az előző évben
+    const seasons = Astronomy.Seasons(gregorianYear - 1);
+    const winterSolstice = seasons.dec_solstice.date;
+
+    // Első újhold a téli napforduló után
+    const firstNewMoon = Astronomy.SearchMoonPhase(0, winterSolstice, 40);
+
+    // Második újhold = kínai újév (UTC)
+    const nextSearchStart = new Date(firstNewMoon.date.getTime() + 24 * 60 * 60 * 1000);
+    const secondNewMoon = Astronomy.SearchMoonPhase(0, nextSearchStart, 35);
+
+    return secondNewMoon.date;
+  };
+
+  const calcHexagram = (calcIdopont, ferfi = true) => {
+    // UTC metódusok, mivel a dátum már tartalmazza a hosszúsági fok korrekciót
+    const year = calcIdopont.getUTCFullYear();
+    const month = calcIdopont.getUTCMonth() + 1;
+    const day = calcIdopont.getUTCDate();
+    const hour = calcIdopont.getUTCHours();
+    const minute = calcIdopont.getUTCMinutes();
+
+    // Szökőév ellenőrzés
+    const szokoEv = (y) => {
+      if (y % 4 === 0) {
+        if (y % 100 !== 0) return true;
+        if (y % 400 === 0) return true;
+      }
+      return false;
+    };
+
+    // Év- és napciklus (kezdőév: 1864)
+    const kezdoEv = 1864;
+    let evErtek = 1;
+    let napErtek = 2;
+    let idx = kezdoEv;
+    let iter = 1;
+    while (idx !== year) {
+      napErtek += szokoEv(idx) ? 6 : 5;
+      if (napErtek > 60) napErtek = napErtek % 60;
+      evErtek = (iter++ % 60) + 1;
+      idx++;
+    }
+
+    // Hatvanas ciklus tábla (60 égi törzs + 60 földi ág)
+    const idoKorr = [
+      ["A", 6, 1], ["B", 2, 6], ["C", 8, 5], ["D", 7, 5], ["E", 1, 4],
+      ["F", 9, 0], ["G", 3, 7], ["H", 4, 3], ["I", 6, 2], ["J", 2, 2],
+    ];
+    const allatoviJegy = [
+      ["a", 1, 6, 2], ["b", 5, 10, 4], ["c", 3, 8, 6], ["d", 3, 8, 6],
+      ["e", 5, 10, 1], ["f", 2, 7, 5], ["g", 2, 7, 5], ["h", 5, 10, 0],
+      ["i", 4, 9, 3], ["j", 4, 9, 3], ["k", 5, 10, 7], ["l", 1, 6, 2],
+    ];
+    const hatvanas = [];
+    const elemallat = [];
+    let idoIdx = 0;
+    let allatIdx = 0;
+    for (let i = 0; i < 60; i++) {
+      hatvanas.push([
+        idoKorr[idoIdx][0] + allatoviJegy[allatIdx][0],
+        idoKorr[idoIdx][1],
+        idoKorr[idoIdx][2],
+      ]);
+      elemallat.push([...allatoviJegy[allatIdx]]);
+      idoIdx = (idoIdx + 1) % 10;
+      allatIdx = (allatIdx + 1) % 12;
+    }
+    hatvanas.push(...elemallat);
+
+    // 4. pont: Év számai
+    const evidx = evErtek;
+    const numbers = [];
+    numbers.push(hatvanas[evidx - 1][1]);
+    numbers.push(hatvanas[evidx - 1 + 60][1]);
+    numbers.push(hatvanas[evidx - 1 + 60][2]);
+    const betu4 = hatvanas[evidx - 1][0][0];
+
+    // Nap index
+    let napidx = napErtek;
+    const jan1 = Date.UTC(year, 0, 1, 0, 0);
+    const calcDay = Date.UTC(year, month - 1, day, 12, 0);
+    const napDiff = Math.floor((calcDay - jan1) / (24 * 60 * 60 * 1000));
+    const napiCiklus = (d) => d <= 0 ? 0 : ((d - 1) % 60) + 1;
+    napidx += napiCiklus(napDiff);
+    while (napidx > 60) napidx -= 60;
+
+    // 12. pont: Nap számai
+    numbers.push(hatvanas[napidx - 1][1]);
+    numbers.push(hatvanas[napidx - 1 + 60][1]);
+    numbers.push(hatvanas[napidx - 1 + 60][2]);
+    const betu12 = hatvanas[napidx - 1][0][0];
+
+    // Tábla generátor (table9/table7 közös minta)
+    const generateTbl = () => {
+      let q = 1;
+      const tbl = [];
+      for (let i = 0; i < 24; i++) {
+        tbl.push(i + q);
+        if (i % 2 !== 0) q--;
+      }
+      return tbl;
+    };
+
+    // 14. pont: Óra számai (table9)
+    const tbl9 = generateTbl();
+    let oraidx = tbl9[hour] + ((betu12.charCodeAt(0) - 'A'.charCodeAt(0)) % 5) * 12;
+    if (oraidx > 60) oraidx -= 60;
+    numbers.push(hatvanas[oraidx - 1][1]);
+    numbers.push(hatvanas[oraidx - 1 + 60][1]);
+    numbers.push(hatvanas[oraidx - 1 + 60][2]);
+
+    // 7. pont: Napszak/szoláris szakasz (table7)
+    const tbl7 = generateTbl();
+    const datumHatarok = [
+      null,
+      [1, 5, 23, 18], [1, 20, 16, 37], [2, 4, 10, 59], [2, 19, 6, 50],
+      [3, 6, 5, 6], [3, 21, 5, 57], [4, 5, 10, 2], [4, 20, 18, 7],
+      [5, 6, 3, 27], [5, 21, 16, 24], [6, 6, 7, 42], [6, 22, 0, 26],
+      [7, 7, 17, 59], [7, 23, 11, 20], [8, 8, 3, 45], [8, 23, 18, 24],
+      [9, 8, 6, 33], [9, 23, 15, 55], [10, 8, 22, 2], [10, 24, 1, 16],
+      [11, 8, 1, 3], [11, 22, 22, 31], [12, 7, 17, 47], [12, 22, 11, 46],
+    ];
+    const refYear = 2000;
+    const datumSearch = Date.UTC(refYear, month - 1, day, hour, minute);
+    let datumidx = 0;
+    for (let i = 1; i <= 24; i++) {
+      const [m, d, h, min] = datumHatarok[i];
+      if (datumSearch >= Date.UTC(refYear, m - 1, d, h, min)) datumidx = i;
+    }
+    datumidx = datumidx % 24;
+
+    const oszlop7 = (betu4.charCodeAt(0) - 'A'.charCodeAt(0)) % 5;
+    let tblHetRetcode = tbl7[datumidx] + (oszlop7 * 12);
+    if (tblHetRetcode > 60) tblHetRetcode -= 60;
+    numbers.push(hatvanas[tblHetRetcode - 1][1]);
+    numbers.push(hatvanas[tblHetRetcode - 1 + 60][1]);
+    numbers.push(hatvanas[tblHetRetcode - 1 + 60][2]);
+
+    // Trigram érték számítás
+    let mennyeiSz = 0;
+    let foldiSz = 0;
+    for (const num of numbers) {
+      num % 2 !== 0 ? mennyeiSz += num : foldiSz += num;
+    }
+
+    // Mennyei trigramok (specMennyei: ferfi → 5, nő → 3, év >= 1984)
+    const mennyeiTrigrams = (szum) => {
+      if (szum > 50) szum -= 50;
+      const spec = ferfi ? 5 : 3;
+      const mTr = [
+        0,
+        2, 0, 1, 6, spec, 7, 3, 4, 5, 2,
+        2, 0, 1, 6, spec, 7, 3, 4, 5, 0,
+        2, 0, 1, 6, spec, 2, 0, 1, 6, spec,
+        7, 3, 4, 5, 2, 2, 0, 1, 6, spec,
+        7, 3, 4, 5, 0, 2, 0, 1, 6, spec,
+      ];
+      return mTr[szum];
+    };
+
+    // Földi trigramok
+    const foldiTrigrams = (szum) => {
+      if (szum > 60) szum -= 60;
+      const fTr = new Array(61).fill(0);
+      fTr[4] = 6; fTr[6] = 7; fTr[8] = 4; fTr[10] = 2;
+      fTr[14] = 6; fTr[16] = 7; fTr[18] = 4;
+      fTr[24] = 6; fTr[26] = 7; fTr[28] = 4; fTr[30] = 1;
+      fTr[34] = 6; fTr[36] = 7; fTr[38] = 4; fTr[40] = 2;
+      fTr[44] = 6; fTr[46] = 7; fTr[48] = 4;
+      fTr[54] = 6; fTr[56] = 7; fTr[58] = 4; fTr[60] = 1;
+      return fTr[szum];
+    };
+
+    const foldiT = foldiTrigrams(foldiSz);
+    const mennyeiT = mennyeiTrigrams(mennyeiSz);
+
+    // Trigram sorrend: ferfi+páros / nő+páratlan → mennyei*8+földi, egyébként fordítva
+    const mennyeiFelul = ferfi ? (year % 2 === 0) : (year % 2 !== 0);
+    return mennyeiFelul
+      ? mennyeiT * 8 + foldiT
+      : foldiT * 8 + mennyeiT;
+  };
+
+  const getMethod8Hexagram = (yearIndex, longitud) => {
+    const newMoonUTC = newMoonTimeCalc(yearIndex);
+
+    // Napidő (solar time) a hexagram számításhoz
+    const solarOffsetMs = (longitud / 15) * 60 * 60 * 1000;
+    const solarDate = new Date(newMoonUTC.getTime() + solarOffsetMs);
+    const hexagramBinary = calcHexagram(solarDate, true);
+
+    // Óraidő (standard időzóna) a megjelenítéshez
+    const tzOffset = Math.round(longitud / 15);
+    const clockDate = new Date(newMoonUTC.getTime() + tzOffset * 60 * 60 * 1000);
+
+    const foundHexagram = hexagrams.find(h => h.binary === hexagramBinary);
+    const result = foundHexagram ? { ...foundHexagram } : { ...hexagrams[yearIndex] };
+    result.newMoonDate = clockDate;
+    result.tzOffset = tzOffset;
+    result.longitud = longitud;
+    return result;
+  };
  
+  const longitud = 19.04;
 
   const getCurrentHexagram = (yearIndex) => {
     switch (activeMethod) {
@@ -339,6 +598,8 @@ const SexagenaryHexagramSystem = () => {
       case 'xuankong': return getMethod5Hexagram(yearIndex);
       case 'govinda': return getMethod6Hexagram(yearIndex);
       case 'govindauj': return getMethod7Hexagram(yearIndex);
+      case 'newmoontime': return getMethod8Hexagram(yearIndex, longitud);
+      case 'govindauj2': return getMethod9Hexagram(yearIndex);
       default: return getMethod1Hexagram(yearIndex, skipOption);
     }
   };
@@ -357,6 +618,9 @@ const SexagenaryHexagramSystem = () => {
       else if (method === 'xuankong') hex = getMethod5Hexagram(i);
       else if (method === 'govinda') hex = getMethod6Hexagram(i);
       else if (method === 'govindauj') hex = getMethod7Hexagram(i);
+      else if (method === 'newmoontime') hex = getMethod8Hexagram(i, longitud);
+      else if (method === 'govindauj2') hex = getMethod9Hexagram(i);
+      else hex = getMethod1Hexagram(i, option);
 
       if (!hexagramCounts[hex.num]) {
         hexagramCounts[hex.num] = 0;
@@ -404,8 +668,10 @@ const SexagenaryHexagramSystem = () => {
     fuxi: validateMethod('fuxi'),
     xuankong: validateMethod('xuankong'),
     govinda: validateMethod('govinda'),
-    govindauj: validateMethod('govindauj')
-  };
+    govindauj: validateMethod('govindauj'),
+    newmoontime: validateMethod('newmoontime'),
+   // govindauj2: validateMethod('govindauj2'),
+   };
 
   const currentYear = 2025;
   const currentYearData = years.find(y => y.year === currentYear);
@@ -437,7 +703,9 @@ const SexagenaryHexagramSystem = () => {
               { key: 'fuxi', label: 'Módszer 4', desc: 'Fu Xi Bináris', note: 'Shao Yong', activeClass: 'bg-purple-100 border-purple-500' },
               { key: 'xuankong', label: 'Módszer 5', desc: 'Xuankong Da Gua 玄空大卦', note: 'Tradicionális Feng Shui', activeClass: 'bg-red-100 border-red-500' },
               { key: 'govinda', label: 'Módszer 6', desc: 'Govinda Törzs-Ág Eredeti', note: 'Fa→☴,Tűz→☲,Föld→☷,Fém→☱,Víz→☵', activeClass: 'bg-pink-100 border-pink-500' },
-              { key: 'govindauj', label: 'Módszer 7', desc: 'Govinda Törzs-Ág Módosított', note: 'Fa→☳☴,Tűz→☲☲,Föld→☷☶,Fém→☰☱,Víz→☵☵', activeClass: 'bg-teal-100 border-teal-500' }
+              { key: 'govindauj', label: 'Módszer 7', desc: 'Govinda Törzs-Ág Módosított', note: 'Fa→☳☴,Tűz→☲☲,Föld→☷☶,Fém→☰☱,Víz→☵☵', activeClass: 'bg-teal-100 border-teal-500' },
+              { key: 'newmoontime', label: 'Módszer 8', desc: 'Adott földrajzi koordinátához rendelt újholdidőpont', note: 'Születési hexagram analógia /Férfi, Budapest/', activeClass: 'bg-gray-100 border-gray-500' },
+      //        { key: 'govindauj2', label: 'Módszer 9', desc: 'Govinda Törzs-Ág Fejlesztés Alatt', note: 'Fejlesztés alatt...', activeClass: 'bg-gray-100 border-gray-500' }
             ].map(m => (
               <button key={m.key} onClick={() => setActiveMethod(m.key)}
                 className={`p-4 rounded-lg border-2 transition-all ${activeMethod === m.key ? m.activeClass : 'bg-white border-gray-300'}`}>
@@ -479,7 +747,7 @@ const SexagenaryHexagramSystem = () => {
                   <div className="flex items-center gap-2 mb-3">
                     {result.isValid ? <CheckCircle className="text-green-600" size={20} /> : <AlertCircle className="text-red-600" size={20} />}
                     <span className="font-semibold text-lg">
-                      {method === 'natural' ? 'Módszer 1' : method === 'combined' ? 'Módszer 2' : method === 'combvalue' ? 'Módszer 3' : method === 'fuxi' ? 'Módszer 4' : method === 'xuankong' ? 'Módszer 5' : method === 'govinda' ? 'Módszer 6' : method === 'govindauj' ? 'Módszer 7' : ''}
+                      {method === 'natural' ? 'Módszer 1' : method === 'combined' ? 'Módszer 2' : method === 'combvalue' ? 'Módszer 3' : method === 'fuxi' ? 'Módszer 4' : method === 'xuankong' ? 'Módszer 5' : method === 'govinda' ? 'Módszer 6' : method === 'govindauj' ? 'Módszer 7' : method === 'newmoontime' ? 'Módszer 8' : method === 'govindauj2' ? 'Módszer 9' : 'Ismeretlen Módszer'}
                     </span>
                   </div>
                   <div className="text-sm mb-2">Egyedi: {result.unique}/60 | Kihagyva: {result.skipped.join(', ') || 'nincs'}</div>
@@ -513,6 +781,7 @@ const SexagenaryHexagramSystem = () => {
                 <th className="p-2">Jelentés</th>
                 <th className="p-2">Rajz</th>
                 <th className="p-2">Dec/Oct</th>
+                {activeMethod === 'newmoontime' && <th className="p-2">Holdújév</th>}
               </tr>
             </thead>
             <tbody>
@@ -528,6 +797,14 @@ const SexagenaryHexagramSystem = () => {
                     <td className="p-2">{hex.meaning}</td>
                     <td className="p-2">{renderHexagram(hex.binary)}</td>
                     <td className="p-2 font-mono">{hex.binary}/{hex.binary.toString(8)}</td>
+                    {activeMethod === 'newmoontime' && hex.newMoonDate && (
+                      <td className="p-2 text-xs font-mono">
+                        {hex.newMoonDate.getUTCFullYear()}-{String(hex.newMoonDate.getUTCMonth() + 1).padStart(2, '0')}-{String(hex.newMoonDate.getUTCDate()).padStart(2, '0')}{' '}
+                        {String(hex.newMoonDate.getUTCHours()).padStart(2, '0')}:{String(hex.newMoonDate.getUTCMinutes()).padStart(2, '0')}
+                        {' '}UTC{hex.tzOffset >= 0 ? '+' : ''}{hex.tzOffset}
+                        <br /><span className="text-gray-500">lng: {hex.longitud}°</span>
+                      </td>
+                    )}
                   </tr>
                 );
               })}
