@@ -1,11 +1,36 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, AlertCircle, CheckCircle } from 'lucide-react';
 import * as Astronomy from 'astronomy-engine';
+import Wensorrend from './Wensorrend';
+import WenPagua from './WenPagua';
 
 const SexagenaryHexagramSystem = () => {
-  const [activeMethod, setActiveMethod] = useState('natural');
+  const [activeMethod, setActiveMethod] = useState('govindauj');
   const [skipOption, setSkipOption] = useState('option1');
-  const [showValidation, setShowValidation] = useState(true);
+  const [showValidation, setShowValidation] = useState(false);
+  const [currentPage, setCurrentPage] = useState('hexagram');
+
+  // Trigram típusok: név → bináris érték
+  const trigramOptions = [
+    { name: 'Qian ☰', binary: 0b111 },
+    { name: 'Dui ☱', binary: 0b011 },
+    { name: 'Li ☲', binary: 0b101 },
+    { name: 'Zhen ☳', binary: 0b001 },
+    { name: 'Xun ☴', binary: 0b110 },
+    { name: 'Kan ☵', binary: 0b010 },
+    { name: 'Gen ☶', binary: 0b100 },
+    { name: 'Kun ☷', binary: 0b000 },
+  ];
+
+  // Módszer 7: editálható trigram hozzárendelések
+  const [m7StemTrigrams, setM7StemTrigrams] = useState([
+    'Zhen ☳', 'Xun ☴', 'Li ☲', 'Li ☲', 'Gen ☶',
+    'Kun ☷', 'Qian ☰', 'Dui ☱',  'Kan ☵', 'Kan ☵',
+  ]);
+  const [m7BranchTrigrams, setM7BranchTrigrams] = useState([
+    'Kan ☵', 'Gen ☶', 'Xun ☴', 'Xun ☴', 'Zhen ☳',
+    'Li ☲', 'Li ☲', 'Kun ☷', 'Dui ☱', 'Dui ☱', 'Qian ☰', 'Kan ☵',
+  ]);
 
   // Égi Törzsek és Földi Ágak
   const stems = [
@@ -282,40 +307,14 @@ const SexagenaryHexagramSystem = () => {
 
   // Módszer 7: Égi Törzs-Földi Ág kombinált rendszer (újított)
   const getMethod7Hexagram = (yearIndex) => {
-    // Égi Törzsek és Földi Ágak
-    const stems = [
-      { name: 'Jia 甲', element: 'Yang Fa', pin: 'jiǎ', trigramBinary: 0b001, trigramName: 'Zhen ☳' },
-      { name: 'Yi 乙', element: 'Yin Fa', pin: 'yǐ', trigramBinary: 0b110, trigramName: 'Xun ☴' },
-      { name: 'Bing 丙', element: 'Yang Tűz', pin: 'bǐng', trigramBinary: 0b101, trigramName: 'Li ☲' },
-      { name: 'Ding 丁', element: 'Yin Tűz', pin: 'dīng', trigramBinary: 0b101, trigramName: 'Li ☲' },
-      { name: 'Wu 戊', element: 'Yang Föld', pin: 'wù', trigramBinary: 0b100, trigramName: 'Gen ☶' },
-      { name: 'Ji 己', element: 'Yin Föld', pin: 'jǐ', trigramBinary: 0b000, trigramName: 'Kun ☷' },
-      { name: 'Geng 庚', element: 'Yang Fém', pin: 'gēng', trigramBinary: 0b111, trigramName: 'Qian ☰' },
-      { name: 'Xin 辛', element: 'Yin Fém', pin: 'xīn', trigramBinary: 0b011, trigramName: 'Dui ☱' },
-      { name: 'Ren 壬', element: 'Yang Víz', pin: 'rén', trigramBinary: 0b010, trigramName: 'Kan ☵' },
-      { name: 'Gui 癸', element: 'Yin Víz', pin: 'guǐ', trigramBinary: 0b010, trigramName: 'Kan ☵' }
-    ];
-
-    const branches = [
-      { name: 'Zi 子', animal: 'Patkány', element: 'Víz', trigramBinary: 0b010, trigramName: 'Kan ☵' },
-      { name: 'Chou 丑', animal: 'Bivaly', element: 'Föld', trigramBinary: 0b100, trigramName: 'Gen ☶' },
-      { name: 'Yin 寅', animal: 'Tigris', element: 'Fa', trigramBinary: 0b110, trigramName: 'Xun ☴' },
-      { name: 'Mao 卯', animal: 'Nyúl', element: 'Fa', trigramBinary: 0b110, trigramName: 'Xun ☴' },
-      { name: 'Chen 辰', animal: 'Sárkány', element: 'Föld', trigramBinary: 0b001, trigramName: 'Zhen ☳' },
-      { name: 'Si 巳', animal: 'Kígyó', element: 'Tűz', trigramBinary: 0b101, trigramName: 'Li ☲' },
-      { name: 'Wu 午', animal: 'Ló', element: 'Tűz', trigramBinary: 0b101, trigramName: 'Li ☲' },
-      { name: 'Wei 未', animal: 'Kecske', element: 'Föld', trigramBinary: 0b000, trigramName: 'Kun ☷' },
-      { name: 'Shen 申', animal: 'Majom', element: 'Fém', trigramBinary: 0b011, trigramName: 'Dui ☱' },
-      { name: 'You 酉', animal: 'Kakas', element: 'Fém', trigramBinary: 0b011, trigramName: 'Dui ☱' },
-      { name: 'Xu 戌', animal: 'Kutya', element: 'Föld', trigramBinary: 0b111, trigramName: 'Qian ☰' },
-      { name: 'Hai 亥', animal: 'Disznó', element: 'Víz', trigramBinary: 0b010, trigramName: 'Kan ☵' }
-    ];
+    const trigramBinaryMap = {};
+    trigramOptions.forEach(t => { trigramBinaryMap[t.name] = t.binary; });
 
     const stemIdx = yearIndex % 10;
     const branchIdx = yearIndex % 12;
 
-    const upperTrigram = branches[branchIdx].trigramBinary;
-    const lowerTrigram = stems[stemIdx].trigramBinary;
+    const upperTrigram = trigramBinaryMap[m7BranchTrigrams[branchIdx]] ?? 0;
+    const lowerTrigram = trigramBinaryMap[m7StemTrigrams[stemIdx]] ?? 0;
     const hexagramNumber = upperTrigram * 8 + lowerTrigram;
 
     const foundHexagram = hexagrams.find(h => h.binary === hexagramNumber);
@@ -328,56 +327,6 @@ const SexagenaryHexagramSystem = () => {
 
     return foundHexagram;
   };
-
-  // Módszer 9: Égi Törzs-Földi Ág kombinált rendszer (fejlesztés alatt)
-  const getMethod9Hexagram = (yearIndex) => {
-    // Égi Törzsek és Földi Ágak
-    
-    const stems = [
-      { name: 'Jia 甲', element: 'Yang Fa', pin: 'jiǎ', trigramBinary: 0b001, trigramName: 'Zhen ☳' },
-      { name: 'Yi 乙', element: 'Yin Fa', pin: 'yǐ', trigramBinary: 0b110, trigramName: 'Xun ☴' },
-      { name: 'Bing 丙', element: 'Yang Tűz', pin: 'bǐng', trigramBinary: 0b101, trigramName: 'Li ☲' },
-      { name: 'Ding 丁', element: 'Yin Tűz', pin: 'dīng', trigramBinary: 0b101, trigramName: 'Li ☲' },
-      { name: 'Wu 戊', element: 'Yang Föld', pin: 'wù', trigramBinary: 0b100, trigramName: 'Gen ☶' },
-      { name: 'Ji 己', element: 'Yin Föld', pin: 'jǐ', trigramBinary: 0b000, trigramName: 'Kun ☷' },
-      { name: 'Geng 庚', element: 'Yang Fém', pin: 'gēng', trigramBinary: 0b011, trigramName: 'Qian ☰' },
-      { name: 'Xin 辛', element: 'Yin Fém', pin: 'xīn', trigramBinary: 0b111, trigramName: 'Dui ☱' },
-      { name: 'Ren 壬', element: 'Yang Víz', pin: 'rén', trigramBinary: 0b010, trigramName: 'Kan ☵' },
-      { name: 'Gui 癸', element: 'Yin Víz', pin: 'guǐ', trigramBinary: 0b010, trigramName: 'Kan ☵' }
-    ];  
-    const branches = [
-      { name: 'Zi 子', animal: 'Patkány', element: 'Víz', trigramBinary: 0b010, trigramName: 'Kan ☵' },
-      { name: 'Chou 丑', animal: 'Bivaly', element: 'Föld', trigramBinary: 0b100, trigramName: 'Gen ☶' },
-      { name: 'Yin 寅', animal: 'Tigris', element: 'Fa', trigramBinary: 0b110, trigramName: 'Xun ☴' },
-      { name: 'Mao 卯', animal: 'Nyúl', element: 'Fa', trigramBinary: 0b1100, trigramName: 'Xun ☴' },
-      { name: 'Chen 辰', animal: 'Sárkány', element: 'Föld', trigramBinary: 0b001, trigramName: 'Zhen ☳' },
-      { name: 'Si 巳', animal: 'Kígyó', element: 'Tűz', trigramBinary: 0b101, trigramName: 'Li ☲' },
-      { name: 'Wu 午', animal: 'Ló', element: 'Tűz', trigramBinary: 0b101, trigramName: 'Li ☲' },
-      { name: 'Wei 未', animal: 'Kecske', element: 'Föld', trigramBinary: 0b000, trigramName: 'Kun ☷' },
-      { name: 'Shen 申', animal: 'Majom', element: 'Fém', trigramBinary: 0b011, trigramName: 'Dui ☱' },
-      { name: 'You 酉', animal: 'Kakas', element: 'Fém', trigramBinary: 0b011, trigramName: 'Dui ☱' },
-      { name: 'Xu 戌', animal: 'Kutya', element: 'Föld', trigramBinary: 0b111, trigramName: 'Qian ☰' },
-      { name: 'Hai 亥', animal: 'Disznó', element: 'Víz', trigramBinary: 0b010, trigramName: 'Kan ☵' }
-    ];
-    
-    const stemIdx = yearIndex % 10;
-    const branchIdx = yearIndex % 12;
-
-    const upperTrigram = branches[branchIdx].trigramBinary;
-    const lowerTrigram = stems[stemIdx].trigramBinary;
-    const hexagramNumber = upperTrigram * 8 + lowerTrigram;
-
-    const foundHexagram = hexagrams.find(h => h.binary === hexagramNumber);
-
-    // Fallback: ha a keresés nem jár sikerrel, visszatérünk a természetes sorrendhez,
-    // hogy elkerüljük az összeomlást.
-    if (!foundHexagram) {
-      return hexagrams[yearIndex];
-    }
-
-    return foundHexagram;
-  };
-
 
   // Módszer 8: NewMoonTime
   const newMoonTimeCalc = (yearIdx) => {
@@ -586,7 +535,8 @@ const SexagenaryHexagramSystem = () => {
     result.longitud = longitud;
     return result;
   };
- 
+
+
   const longitud = 19.04;
 
   const getCurrentHexagram = (yearIndex) => {
@@ -599,7 +549,6 @@ const SexagenaryHexagramSystem = () => {
       case 'govinda': return getMethod6Hexagram(yearIndex);
       case 'govindauj': return getMethod7Hexagram(yearIndex);
       case 'newmoontime': return getMethod8Hexagram(yearIndex, longitud);
-      case 'govindauj2': return getMethod9Hexagram(yearIndex);
       default: return getMethod1Hexagram(yearIndex, skipOption);
     }
   };
@@ -619,7 +568,6 @@ const SexagenaryHexagramSystem = () => {
       else if (method === 'govinda') hex = getMethod6Hexagram(i);
       else if (method === 'govindauj') hex = getMethod7Hexagram(i);
       else if (method === 'newmoontime') hex = getMethod8Hexagram(i, longitud);
-      else if (method === 'govindauj2') hex = getMethod9Hexagram(i);
       else hex = getMethod1Hexagram(i, option);
 
       if (!hexagramCounts[hex.num]) {
@@ -670,11 +618,54 @@ const SexagenaryHexagramSystem = () => {
     govinda: validateMethod('govinda'),
     govindauj: validateMethod('govindauj'),
     newmoontime: validateMethod('newmoontime'),
-   // govindauj2: validateMethod('govindauj2'),
    };
 
-  const currentYear = 2025;
+  const currentYear = 2026;
   const currentYearData = years.find(y => y.year === currentYear);
+
+  if (currentPage === 'wensorrend') {
+    return (
+      <div>
+        <div className="w-full max-w-6xl mx-auto px-6 pt-4 flex gap-3">
+          <button
+            onClick={() => setCurrentPage('hexagram')}
+            className="mb-2 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-all text-sm"
+          >
+            ← Hexagram Rendszer
+          </button>
+          <button
+            onClick={() => setCurrentPage('wenpagua')}
+            className="mb-2 px-4 py-2 bg-gray-800 text-amber-200 rounded-lg hover:bg-gray-700 transition-all text-sm"
+          >
+            後天八卦 Wen-pagua →
+          </button>
+        </div>
+        <Wensorrend />
+      </div>
+    );
+  }
+
+  if (currentPage === 'wenpagua') {
+    return (
+      <div>
+        <div className="w-full max-w-6xl mx-auto px-6 pt-4 flex gap-3">
+          <button
+            onClick={() => setCurrentPage('hexagram')}
+            className="mb-2 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-all text-sm"
+          >
+            ← Hexagram Rendszer
+          </button>
+          <button
+            onClick={() => setCurrentPage('wensorrend')}
+            className="mb-2 px-4 py-2 bg-gray-800 text-amber-200 rounded-lg hover:bg-gray-700 transition-all text-sm"
+          >
+            ← 先天八卦 Fu Xi-pagua
+          </button>
+        </div>
+        <WenPagua />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6 bg-gradient-to-br from-amber-50 to-orange-50">
@@ -682,6 +673,23 @@ const SexagenaryHexagramSystem = () => {
         <h1 className="text-3xl font-bold text-center mb-2 text-gray-800">六十甲子 × 易經 六十四卦</h1>
         <h2 className="text-xl text-center mb-4 text-gray-600">Hatvanéves Ciklus - I Ching Hexagram Rendszer</h2>
         <p className="text-center text-sm text-gray-500 mb-4">1984-2043 ciklus (Jia Zi 甲子 - Gui Hai 癸亥)</p>
+
+       {/*
+        <div className="text-center mb-4 flex justify-center gap-3 flex-wrap">
+          <button
+            onClick={() => setCurrentPage('wensorrend')}
+            className="px-6 py-3 bg-gradient-to-r from-gray-800 to-gray-900 text-amber-200 rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all font-semibold"
+          >
+            先天八卦 Fu Xi-pagua →
+          </button>
+          <button
+            onClick={() => setCurrentPage('wenpagua')}
+            className="px-6 py-3 bg-gradient-to-r from-gray-800 to-gray-900 text-amber-200 rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all font-semibold"
+          >
+            後天八卦 Wen-pagua →
+          </button>
+        </div>
+        */}
 
         {currentYearData && (
           <div className="bg-gradient-to-r from-red-100 to-orange-100 p-4 rounded-lg mb-4 border-2 border-red-300">
@@ -705,8 +713,7 @@ const SexagenaryHexagramSystem = () => {
               { key: 'govinda', label: 'Módszer 6', desc: 'Govinda Törzs-Ág Eredeti', note: 'Fa→☴,Tűz→☲,Föld→☷,Fém→☱,Víz→☵', activeClass: 'bg-pink-100 border-pink-500' },
               { key: 'govindauj', label: 'Módszer 7', desc: 'Govinda Törzs-Ág Módosított', note: 'Fa→☳☴,Tűz→☲☲,Föld→☷☶,Fém→☰☱,Víz→☵☵', activeClass: 'bg-teal-100 border-teal-500' },
               { key: 'newmoontime', label: 'Módszer 8', desc: 'Adott földrajzi koordinátához rendelt újholdidőpont', note: 'Születési hexagram analógia /Férfi, Budapest/', activeClass: 'bg-gray-100 border-gray-500' },
-      //        { key: 'govindauj2', label: 'Módszer 9', desc: 'Govinda Törzs-Ág Fejlesztés Alatt', note: 'Fejlesztés alatt...', activeClass: 'bg-gray-100 border-gray-500' }
-            ].map(m => (
+              ].map(m => (
               <button key={m.key} onClick={() => setActiveMethod(m.key)}
                 className={`p-4 rounded-lg border-2 transition-all ${activeMethod === m.key ? m.activeClass : 'bg-white border-gray-300'}`}>
                 <div className="font-semibold">{m.label}</div>
@@ -732,6 +739,70 @@ const SexagenaryHexagramSystem = () => {
           </div>
         )}
 
+        {activeMethod === 'govindauj' && (
+          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+            <h3 className="font-semibold mb-3 text-gray-700">Trigram hozzárendelés (Módszer 7):</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h4 className="font-semibold mb-2 text-sm text-gray-600">Égi Törzsek (Stems)</h4>
+                <table className="w-full text-sm">
+                  <tbody>
+                    {stems.map((s, i) => (
+                      <tr key={i} className="border-b">
+                        <td className="py-1 pr-2">{s.name}</td>
+                        <td className="py-1 pr-2 text-xs text-gray-500">{s.element}</td>
+                        <td className="py-1">
+                          <select
+                            value={m7StemTrigrams[i]}
+                            onChange={(e) => {
+                              const updated = [...m7StemTrigrams];
+                              updated[i] = e.target.value;
+                              setM7StemTrigrams(updated);
+                            }}
+                            className="border rounded px-1 py-0.5 text-sm w-full"
+                          >
+                            {trigramOptions.map(t => (
+                              <option key={t.name} value={t.name}>{t.name} ({t.binary.toString(2).padStart(3, '0')})</option>
+                            ))}
+                          </select>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2 text-sm text-gray-600">Földi Ágak (Branches)</h4>
+                <table className="w-full text-sm">
+                  <tbody>
+                    {branches.map((b, i) => (
+                      <tr key={i} className="border-b">
+                        <td className="py-1 pr-2">{b.name}</td>
+                        <td className="py-1 pr-2 text-xs text-gray-500">{b.animal}</td>
+                        <td className="py-1">
+                          <select
+                            value={m7BranchTrigrams[i]}
+                            onChange={(e) => {
+                              const updated = [...m7BranchTrigrams];
+                              updated[i] = e.target.value;
+                              setM7BranchTrigrams(updated);
+                            }}
+                            className="border rounded px-1 py-0.5 text-sm w-full"
+                          >
+                            {trigramOptions.map(t => (
+                              <option key={t.name} value={t.name}>{t.name} ({t.binary.toString(2).padStart(3, '0')})</option>
+                            ))}
+                          </select>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
         <button onClick={() => setShowValidation(!showValidation)}
           className="w-full mb-4 p-3 bg-indigo-100 hover:bg-indigo-200 rounded-lg flex items-center justify-center gap-2">
           {showValidation ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
@@ -747,7 +818,7 @@ const SexagenaryHexagramSystem = () => {
                   <div className="flex items-center gap-2 mb-3">
                     {result.isValid ? <CheckCircle className="text-green-600" size={20} /> : <AlertCircle className="text-red-600" size={20} />}
                     <span className="font-semibold text-lg">
-                      {method === 'natural' ? 'Módszer 1' : method === 'combined' ? 'Módszer 2' : method === 'combvalue' ? 'Módszer 3' : method === 'fuxi' ? 'Módszer 4' : method === 'xuankong' ? 'Módszer 5' : method === 'govinda' ? 'Módszer 6' : method === 'govindauj' ? 'Módszer 7' : method === 'newmoontime' ? 'Módszer 8' : method === 'govindauj2' ? 'Módszer 9' : 'Ismeretlen Módszer'}
+                      {method === 'natural' ? 'Módszer 1' : method === 'combined' ? 'Módszer 2' : method === 'combvalue' ? 'Módszer 3' : method === 'fuxi' ? 'Módszer 4' : method === 'xuankong' ? 'Módszer 5' : method === 'govinda' ? 'Módszer 6' : method === 'govindauj' ? 'Módszer 7' : method === 'newmoontime' ? 'Módszer 8' : 'Ismeretlen Módszer'}
                     </span>
                   </div>
                   <div className="text-sm mb-2">Egyedi: {result.unique}/60 | Kihagyva: {result.skipped.join(', ') || 'nincs'}</div>
