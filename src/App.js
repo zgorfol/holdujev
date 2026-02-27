@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp, AlertCircle, CheckCircle } from 'lucide-react';
 import * as Astronomy from 'astronomy-engine';
 import Wensorrend from './Wensorrend';
 import WenPagua from './WenPagua';
+import Wenhexagram from './Wenhexagrams';
 
 const SexagenaryHexagramSystem = () => {
   const [activeMethod, setActiveMethod] = useState('govindauj');
@@ -667,6 +668,22 @@ const SexagenaryHexagramSystem = () => {
     );
   }
 
+  if (currentPage === 'wenhexagram') {
+    return (
+      <div>
+        <div className="w-full max-w-6xl mx-auto px-6 pt-4 flex gap-3">
+          <button
+            onClick={() => setCurrentPage('hexagram')}
+            className="mb-2 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-all text-sm"
+          >
+            ← Hexagram Rendszer
+          </button>
+        </div>
+        <Wenhexagram />
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-6xl mx-auto p-6 bg-gradient-to-br from-amber-50 to-orange-50">
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
@@ -690,7 +707,15 @@ const SexagenaryHexagramSystem = () => {
           </button>
         </div>
         */}
-
+        <div className="text-center mb-4 flex justify-center gap-3 flex-wrap">
+          <button
+            onClick={() => setCurrentPage('wenhexagram')}
+            className="px-6 py-3 bg-gradient-to-r from-gray-800 to-gray-900 text-amber-200 rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all font-semibold"
+          >
+            Wen Hexagrams →
+          </button>
+         
+        </div>
         {currentYearData && (
           <div className="bg-gradient-to-r from-red-100 to-orange-100 p-4 rounded-lg mb-4 border-2 border-red-300">
             <p className="text-center font-semibold text-lg">
